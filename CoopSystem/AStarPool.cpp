@@ -5,6 +5,7 @@
 #include "string.h"
 #include "AStarNode.h"
 #include "AStarPool.h"
+#include "jCooperativeTable.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -12,6 +13,7 @@
 
 AStarPool::AStarPool()
 {
+	jCoop.Init(25);
 	nextfree = 0;
 }
 

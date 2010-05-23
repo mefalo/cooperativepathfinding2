@@ -16,7 +16,7 @@ class AStarList
 {
 public:
 	AStarList();
-	AStarList(locstruct startingstate);
+	AStarList(locstruct startingstate,  locstruct targetstate);
 	virtual ~AStarList();
 	bool IsEmpty();
 	AStarNode *GetBestNode();

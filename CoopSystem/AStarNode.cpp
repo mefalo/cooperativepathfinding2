@@ -19,18 +19,12 @@ using namespace std;
 
 AStarNode::AStarNode()
 {
-
-	for(int i = 0; i < MAXY; i++)
-	{
-		for(int y = 0; y < MAXX; y++)
-			myMap[i][y] = jCoop.getGraphAtTime(0)->myMap[i][y];
-	}
-
-	TARGETSTATE = jCoop.getRandomSpawn();
-	STARTSTATE = jCoop.getRandomDest();
-
 }
 
+void AStarNode::setTarget(locstruct start)
+{
+TARGETSTATE = start;
+}
 AStarNode::~AStarNode()
 {
 
@@ -43,19 +37,24 @@ double AStarNode::f() {
 void AStarNode::Generate() {
 	int i;
 	locstruct newloc;
+	this->setTarget(TARGETSTATE);
 
 	// Now decide what moves are possible, given the location of the gap
 	for(i=0; i < 8; i++) {
 		kids[i] = NULL;
 		newloc.x = this->loc.x + generator[i].x;
 		newloc.y = this->loc.y + generator[i].y;
-		if(newloc.x < 0 || newloc.x >= MAXX || newloc.y < 0 || newloc.y >= MAXY) continue;
-		if(this->SameTiles(newloc)) continue;
-		kids[i] = pool.Allocate();
-		kids[i]->loc = newloc;
-		kids[i]->parent = this;
-		kids[i]->gsteps = gsteps + myMap[newloc.y][newloc.x];
-		kids[i]->hestimate = kids[i]->Manhattan();
+		setCost(jCoop.getGraphAtTime(0)->myMap[newloc.y][newloc.x]);
+			if(isWall()) continue;
+				if(isBlocked()) continue;
+					if(newloc.x < 0 || newloc.x >= MAXX || newloc.y < 0 || newloc.y >= MAXY) continue;
+						if(this->SameTiles(newloc)) continue;
+									kids[i] = pool.Allocate();
+									kids[i]->setTarget(TARGETSTATE);
+									kids[i]->loc = newloc;
+									kids[i]->parent = this;
+									kids[i]->gsteps = gsteps + jCoop.getGraphAtTime(0)->myMap[newloc.y][newloc.x];
+									kids[i]->hestimate = kids[i]->Manhattan();
 	}
 	cout << endl << flush;
 }
@@ -122,10 +121,15 @@ void AStarNode::Update() {
 
 
 int AStarNode::SameTiles(locstruct other) {
-	if((this->loc.x != other.x) || (this->loc.y != other.y)) return false;
+	if((this->loc.x != other.x) || (this->loc.y != other.y)) 
+		return false;
 	else return true;
 }
 
+void AStarNode::setCost(int cost)
+{
+	m_Cost = cost;
+}
 void AStarNode::Print() {
 	cout << "\n";
 	cout << "(" << this->loc.x << "," << this->loc.y << ") ";
@@ -133,6 +137,22 @@ void AStarNode::Print() {
 	cout << flush;
 }
 
+bool AStarNode::isWall()
+{
+	if(m_Cost == 6)
+		return true;
+
+	return false;
+}
+
+bool AStarNode::isBlocked()
+{
+	if(m_Cost == 7)
+		return true;
+
+	return false;
+
+}
 
 void AStarNode::TracePath() {
 	AStarNode *node;
