@@ -81,6 +81,7 @@ class jCooperativeTable
 		float m_UpdateInterval;
 
 
+		bool m_Init;
 		//Map version - NOT WORKING WELL AT ALL - Thought about using a Vector but you can't easily delete the first element
 		//which is something i NEED TO DO!
 		//std::map<int,NavGraph*>  m_SlicedSparseGraph;

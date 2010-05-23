@@ -9,8 +9,8 @@
 //extern locstruct STARTSTATE;
 //
 extern AStarPool pool;
-extern AStarList OPEN;
-extern AStarList CLOSED;
+//extern AStarList OPEN;
+//extern AStarList CLOSED;
 //
 //extern int myMap[MAXY][MAXX];
 //

@@ -15,21 +15,25 @@
 class AStarNode  
 {
 protected:
-	int myMap[MAXY][MAXX];
+	int m_Cost;
 	locstruct TARGETSTATE;
-	locstruct STARTSTATE;
+	//locstruct STARTSTATE;
 
 public:
 	AStarNode();
+	void setTarget(locstruct TARGETSTATE);
 	virtual ~AStarNode();
 	double f();
 	void Generate();
 	double Manhattan();
 	double AirDistance();
 	int SameTiles(locstruct other);
+	bool isWall();
+	bool isBlocked();
 	void Print();
 	void TracePath();
 	void Update();
+	void setCost(int cost);
 	
 	AStarNode *parent;
 	AStarNode *kids[8]; // A maximum of four moves are possible

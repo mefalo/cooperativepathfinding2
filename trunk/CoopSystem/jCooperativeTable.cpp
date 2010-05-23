@@ -2,7 +2,7 @@
 
 jCooperativeTable::jCooperativeTable()
 {
-
+	m_Init = false;
 }
 
 jCooperativeTable::~jCooperativeTable()
@@ -16,7 +16,9 @@ jCooperativeTable::~jCooperativeTable()
 
 void jCooperativeTable::Init(float travelTime)
 {
-
+if(!(m_Init))
+{
+	m_Init = true;
 	m_Map = new jMap();
 	m_TimeDistance = 5;
 		
@@ -34,11 +36,12 @@ void jCooperativeTable::Init(float travelTime)
 		delete m_MapCopy;
 	}
 }
+}
 
 locstruct jCooperativeTable::getRandomDest()
 {
-	int randX = rand() % 7;
-	int randY = rand() % 7;
+	int randX = rand() % MAXX;
+	int randY = rand() % MAXY;
 
 	locstruct STARTSTATE = { randX, randY };
 	//if(!(m_TakenSpawn.find(STARTSTATE))

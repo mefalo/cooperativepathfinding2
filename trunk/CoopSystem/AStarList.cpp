@@ -20,10 +20,11 @@ AStarList::AStarList()
 	howmany = 0;
 }
 
-AStarList::AStarList(locstruct startingstate)
+AStarList::AStarList(locstruct startingstate, locstruct targetstate)
 {
 	n[0] = pool.Allocate();
 	n[0]->loc = startingstate;
+	n[0]->setTarget(targetstate);
 	n[0]->gsteps = 0;
 	n[0]->hestimate = n[0]->Manhattan();
 
