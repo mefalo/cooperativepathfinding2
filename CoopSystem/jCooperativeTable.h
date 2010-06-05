@@ -11,6 +11,7 @@
 #include <string>
 #include <deque>
 #include <vector>
+#include <map>
 #include "defs.h"
 #include "jMap.h"
 
@@ -31,10 +32,12 @@ class jCooperativeTable
 
 	 		// Other non-static member functions
 		//private:
-		  jCooperativeTable();
-		  jCooperativeTable(const jCooperativeTable&){};                 // Prevent copy-construction
-		  jCooperativeTable& operator=(const jCooperativeTable&){};      // Prevent assignment
-		  ~jCooperativeTable();
+	 jCooperativeTable();
+	 jCooperativeTable(const jCooperativeTable&){};                 // Prevent copy-construction
+	 jCooperativeTable& operator=(const jCooperativeTable&){};      // Prevent assignment
+	 ~jCooperativeTable();
+
+	 void ReserveTile(int Time, locstruct tile);
 
 	 //Access functions
 	jMap* getGraphAtTime(int time)
@@ -60,18 +63,41 @@ class jCooperativeTable
 	 }
 
 	 
-	locstruct getRandomSpawn();	
-	locstruct getRandomDest();
+	 locstruct getTestSpawn();
+	 locstruct getTestDest();
+	
+	 locstruct getRandomSpawn();	
+	 locstruct getRandomDest();
+
+	 void ReserveNode(int time, locstruct pos);
+	std::vector<locstruct> getReservedTiles()
+	 {
+		return m_ReservedPlaces;
+	 }
 	 
 	 void MaintainTimeSlice();
 
 	 void Update();
 
+	 void AddPath(int time, locstruct path);
+	 std::vector<locstruct> returnCollisions()
+	 {
+		return	m_CollisionOccured;
+	 };
+
+
+
 
 	protected:
 
+		int agent;
+
 		std::vector<locstruct> m_TakenSpawn;
+		std::vector<locstruct>::iterator it_TakenSpawn;
 		std::vector<locstruct> m_TakenDest;
+		std::vector<locstruct>::iterator it_TakenDest;
+
+		std::vector<locstruct> m_ReservedPlaces;
 
 		jMap* m_Map;
 
@@ -88,8 +114,8 @@ class jCooperativeTable
 		//std::map<int,NavGraph*>::iterator it;
 
 //		std::queue<NavGraph*> m_SlicedSparseGraph;
-
-
+		std::map<int, std::vector<locstruct>> m_CollisionCheck;
+		std::vector<locstruct> m_CollisionOccured;
 
 		std::deque <jMap*> m_SlicedSparseGraph;
 

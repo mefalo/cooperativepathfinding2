@@ -15,6 +15,8 @@
 
 #include "Agent.h"
 
+#include <vector>
+
 #include "jCooperativeTable.h"
 
 using namespace std;
@@ -25,7 +27,7 @@ using namespace std;
 
 //locstruct STARTSTATE =  { 0,  0};
 //locstruct TARGETSTATE = { 30, 19};
-	AStarPool pool;
+AStarPool pool;
 //AStarPool pool;
 //AStarList OPEN(STARTSTATE);
 //AStarList CLOSED;
@@ -127,8 +129,9 @@ void RandomMap()
 	
 
 int main( int argc, char *argv[] ) {
+	bool once = false;
 	AStarNode *goal;
-	const int NUMAGENTS = 5;
+	const int NUMAGENTS = 2;
 
 	Agent* agent[NUMAGENTS];
 
@@ -174,22 +177,19 @@ int main( int argc, char *argv[] ) {
 	breadcrumbs->set_transparent_colour(255, 255, 255);*/
 
 	for( int i = 0; i < NUMAGENTS; i++)
+	{
 		agent[i]->DoAStar();
 	//goal = DoAStar();
-
-		for( int i = 0; i < NUMAGENTS; i++)
-		{
-			if(agent[i]->getPathGoal() == NULL){
+		if(agent[i]->getPathGoal() == NULL){
 				cout << "\n Agent " << i << "FAILED\n";
-			} else
+		} else
 			{
 				cout<< "\n Agent " << i << "\nSUCCESS!!\n";
 				agent[i]->TracePath();
 		}
-		}
-
-	for( int i = 0; i < NUMAGENTS; i++)
-				agent[i]->LinearisePath();
+		
+		agent[i]->LinearisePath();
+	}
 //	LinearisePath(goal, solution);
 
 	// This is the game loop message handler
@@ -237,7 +237,6 @@ int main( int argc, char *argv[] ) {
 		}
 
 
-
 		tm->draw_screen(0, 0);
 		for( int i = 0; i < NUMAGENTS; i++){
 
@@ -256,10 +255,27 @@ int main( int argc, char *argv[] ) {
 		}
 		
 		for( int i = 0; i < NUMAGENTS; i++)
-				agent[i]->Walk();
+		{
+			agent[i]->Walk();
+		}
+
+
+		std::vector<locstruct> colls = jCoop.returnCollisions();
+		std::vector<locstruct>::iterator it;
+
+
+
+	/*	cout << "\n Agent Number " << NUMAGENTS;
+		cout << "\n Collisions: " << colls.size();*/
+
+
+		for(it = colls.begin(); it != colls.end(); it++)
+			tm->set_square_contents((*it).x, (*it).y, 7);
+
 
 		SDL_Flip(screen);
 	}
+
 
 	SDL_Quit();
 

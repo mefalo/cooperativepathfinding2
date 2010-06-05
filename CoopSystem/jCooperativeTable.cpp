@@ -18,9 +18,10 @@ void jCooperativeTable::Init(float travelTime)
 {
 if(!(m_Init))
 {
+	agent = 0;
 	m_Init = true;
 	m_Map = new jMap();
-	m_TimeDistance = 5;
+	m_TimeDistance = 50;
 		
 		//determined by the time it takes an agent to go from node to node.
 	m_UpdateInterval = travelTime;
@@ -38,24 +39,72 @@ if(!(m_Init))
 }
 }
 
+void jCooperativeTable::ReserveNode(int time, locstruct pos)
+{
+	if(time >= 0 && time < m_TimeDistance)
+	{
+	 m_SlicedSparseGraph[time]->myMap[pos.y][pos.x] = 7;
+	 m_ReservedPlaces.push_back(pos);
+	}
+}
+
+locstruct jCooperativeTable::getTestSpawn()
+{
+	if(agent == 0)
+	{
+		agent = 1;
+		locstruct Spawn ={0,0};
+		return Spawn;
+	}
+
+	if(agent == 1)
+	{
+		locstruct Spawn ={26,0};
+		return Spawn;
+	}
+}
+
+locstruct jCooperativeTable::getTestDest()
+{
+		if(agent == 0)
+	{
+		locstruct Spawn ={ 25,0};
+		return Spawn;
+	}
+
+	if(agent == 1)
+	{
+		locstruct Spawn ={1,0};
+		return Spawn;
+	}
+}
 locstruct jCooperativeTable::getRandomDest()
 {
-	int randX = rand() % MAXX;
-	int randY = rand() % MAXY;
 
-	locstruct STARTSTATE = { randX, randY };
-	//if(!(m_TakenSpawn.find(STARTSTATE))
-	//	m_TakenSpawn.push_back(STARTSTATE);
+	locstruct STARTDEST = { 25,25};
+	int randX;
+	int randY;
 
+	//for(it_TakenDest = m_TakenDest.begin(); it_TakenDest != m_TakenDest.end(); it_TakenDest++)
+	//{
+	//	if(STARTDEST.x == (*(it_TakenDest)).x)
+	//		if(STARTDEST.y == (*(it_TakenDest)).y)
+		
+		randX = rand() % MAXX;
+		randY = rand() % MAXY;
 
-	return STARTSTATE;
+		STARTDEST.x = randX;
+		STARTDEST.y = randY;
+	//}
 
+	m_TakenDest.push_back(STARTDEST);
+	return STARTDEST;
 }
 
 locstruct jCooperativeTable::getRandomSpawn()
 {
-	int randX = rand() % 7;
-	int randY = rand() % 7;
+	int randX = rand() % MAXX;
+	int randY = rand() % MAXY;
 
 	locstruct STARTSTATE = { randX, randY };
 	//if(!(m_TakenSpawn.find(STARTSTATE))
@@ -83,8 +132,26 @@ void jCooperativeTable::MaintainTimeSlice()
 }
 
 
+void jCooperativeTable::ReserveTile(int Time, locstruct tile)
+{
+	m_SlicedSparseGraph[Time]->myMap[tile.x][tile.y] = 6;
+}
 void jCooperativeTable::Update()
 {
 		MaintainTimeSlice();
 
+}
+void jCooperativeTable::AddPath(int time, locstruct path)
+{
+	std::vector<locstruct>::iterator it;
+
+	if(m_CollisionCheck[time].size() > 0)
+	{
+		for(it = m_CollisionCheck[time].begin(); it != m_CollisionCheck[time].end(); it++)
+			if((*it).x == path.x)
+				if((*it).y == path.y)
+				m_CollisionOccured.push_back((*it));
+	}
+
+	m_CollisionCheck[time].push_back(path);
 }
