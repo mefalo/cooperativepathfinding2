@@ -44,6 +44,8 @@ public:
 	locstruct TARGETSTATE;
 
 protected:
+	int m_Sprite;
+	int m_CurrentTime;
 	int m_Steps;
 	AStarList OPEN;
 	AStarList CLOSED;

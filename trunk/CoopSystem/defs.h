@@ -10,6 +10,7 @@ typedef struct {
 
 #define MAXX	(32)
 #define MAXY	(20)
+#define SPRITES (3)
 
 #endif
 

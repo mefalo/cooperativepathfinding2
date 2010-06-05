@@ -13,7 +13,7 @@
 
 AStarPool::AStarPool()
 {
-	jCoop.Init(25);
+	jCoop.Init(60);
 	nextfree = 0;
 }
 

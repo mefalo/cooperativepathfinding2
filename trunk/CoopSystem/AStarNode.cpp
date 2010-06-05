@@ -34,7 +34,7 @@ double AStarNode::f() {
 	return gsteps + hestimate;
 }
 
-void AStarNode::Generate() {
+void AStarNode::Generate(int currentTime) {
 	int i;
 	locstruct newloc;
 	this->setTarget(TARGETSTATE);
@@ -44,16 +44,19 @@ void AStarNode::Generate() {
 		kids[i] = NULL;
 		newloc.x = this->loc.x + generator[i].x;
 		newloc.y = this->loc.y + generator[i].y;
-		setCost(jCoop.getGraphAtTime(0)->myMap[newloc.y][newloc.x]);
-			if(isWall()) continue;
-				if(isBlocked()) continue;
-					if(newloc.x < 0 || newloc.x >= MAXX || newloc.y < 0 || newloc.y >= MAXY) continue;
+			if(newloc.x < 0 || newloc.x >= MAXX || newloc.y < 0 || newloc.y >= MAXY) continue;
+				if(jCoop.getGraphAtTime(0)->myMap[newloc.y][newloc.x] == 6)
+				setCost(jCoop.getGraphAtTime(0)->myMap[newloc.y][newloc.x]);
+				else
+				setCost(jCoop.getGraphAtTime(currentTime)->myMap[newloc.y][newloc.x]);
+					if(isWall()) continue;
+						if(isBlocked()) continue;
 						if(this->SameTiles(newloc)) continue;
 									kids[i] = pool.Allocate();
 									kids[i]->setTarget(TARGETSTATE);
 									kids[i]->loc = newloc;
 									kids[i]->parent = this;
-									kids[i]->gsteps = gsteps + jCoop.getGraphAtTime(0)->myMap[newloc.y][newloc.x];
+									kids[i]->gsteps = gsteps + jCoop.getGraphAtTime(currentTime)->myMap[newloc.y][newloc.x];
 									kids[i]->hestimate = kids[i]->Manhattan();
 	}
 	cout << endl << flush;

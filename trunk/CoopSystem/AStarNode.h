@@ -24,7 +24,7 @@ public:
 	void setTarget(locstruct TARGETSTATE);
 	virtual ~AStarNode();
 	double f();
-	void Generate();
+	void Generate(int currentTime);
 	double Manhattan();
 	double AirDistance();
 	int SameTiles(locstruct other);
